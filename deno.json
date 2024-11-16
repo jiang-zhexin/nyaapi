@@ -13,6 +13,7 @@
         "dev": "deno run --watch --allow-read --allow-net src/index.ts"
     },
     "imports": {
+        "hono": "npm:hono@^4.6.10",
         "htmlrewriter": "npm:htmlrewriter@^0.0.12"
     }
 }

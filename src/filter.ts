@@ -1,7 +1,20 @@
 import { HTMLRewriter } from 'htmlrewriter'
 import { Element, TextChunk } from 'htmlrewriter/types'
 
-export async function filter(response: Response): Promise<Response> {
+interface nyaa_torrent {
+    id: number
+    category: string
+    title: string
+    torrent: string
+    magnet: string
+    size: string
+    time: number
+    seeders: number
+    leechers: number
+    downloads: number
+}
+
+export async function filter(response: Response): Promise<nyaa_torrent[]> {
     const category = new AttributeHandler('tr td:first-child a', 'title')
     const id = new AttributeHandler('tr td:nth-child(2) a:not([class])', 'href')
     const title = new AttributeHandler('tr td:nth-child(2) a:not([class])', 'title')
@@ -28,24 +41,19 @@ export async function filter(response: Response): Promise<Response> {
         .body?.pipeTo(new WritableStream())
 
     const result = id.Value.map((id, index) => ({
-        id: id.slice(6),
+        id: parseInt(id.slice(6)),
         category: category.Value[index],
         title: title.Value[index],
         torrent: `https://nyaa.si${torrent.Value[index]}`,
         magnet: `magnet:?xt=${magnetParse(magnet.Value[index])?.xt}`,
         size: size.Value[index],
-        time: time.Value[index],
-        seeders: seeders.Value[index],
-        leechers: leechers.Value[index],
-        downloads: downloads.Value[index],
+        time: parseInt(time.Value[index]),
+        seeders: parseInt(seeders.Value[index]),
+        leechers: parseInt(leechers.Value[index]),
+        downloads: parseInt(downloads.Value[index]),
     }))
 
-    return new Response(JSON.stringify(result), {
-        headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'maxage=1800',
-        },
-    })
+    return result
 }
 
 function magnetParse(magnet: string) {

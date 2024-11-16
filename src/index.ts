@@ -1,16 +1,19 @@
 import { filter } from './filter.ts'
+import { Hono } from 'hono'
 
-async function main(request: Request): Promise<Response> {
-	const { pathname, searchParams, search } = new URL(request.url)
-	if (!(pathname === '/' || pathname.startsWith('/user/'))) {
-		return new Response('This API only filter torrent info. You need to go https://nyaa.si to download binary file.', { status: 400 })
-	}
-	if (pathname === '/' && searchParams.get('page') === 'rss') {
-		return new Response('Unsupport rss page.', { status: 400 })
-	}
-	const nyaa = await fetch(`https://nyaa.si${pathname}${search}`)
-	const response = await filter(nyaa)
-	return response
-}
+const app = new Hono()
 
-Deno.serve(main)
+app.notFound((c) => {
+	return c.text('This API only filter torrent info. You need to go https://nyaa.si to download binary file.', 400)
+})
+
+app.on('GET', ['/', '/user/:name'], async (c) => {
+	if (c.req.query('page') === 'rss') {
+		return c.text('Unsupport rss page.', 400)
+	}
+	const nyaa = await fetch(`https://nyaa.si${c.req.path}`)
+	const result = await filter(nyaa)
+	return c.json(result)
+})
+
+Deno.serve(app.fetch)
