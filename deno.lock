@@ -1,0 +1,16 @@
+{
+    "version": "4",
+    "specifiers": {
+        "npm:htmlrewriter@^0.0.12": "0.0.12"
+    },
+    "npm": {
+        "htmlrewriter@0.0.12": {
+            "integrity": "sha512-Tw+wORUlNL9+JQCIo7J4SuX/T3M1xRAC/0XaifnRPLHCX95jbZy/0CI06n7BhuFQJhSdNA7ZoxnStJmF31FZRw=="
+        }
+    },
+    "workspace": {
+        "dependencies": [
+            "npm:htmlrewriter@^0.0.12"
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "fmt": {
+        "lineWidth": 160,
+        "indentWidth": 4,
+        "semiColons": false,
+        "singleQuote": true,
+        "proseWrap": "preserve",
+        "include": [
+            "src/"
+        ]
+    },
+    "tasks": {
+        "dev": "deno run --watch --allow-read --allow-net src/index.ts"
+    },
+    "imports": {
+        "htmlrewriter": "npm:htmlrewriter@^0.0.12"
+    }
+}
