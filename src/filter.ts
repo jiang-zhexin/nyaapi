@@ -1,5 +1,5 @@
 import { HTMLRewriter } from 'htmlrewriter'
-import { Element, TextChunk } from 'htmlrewriter/types'
+import { Element, TextChunk } from './types.ts'
 
 interface nyaa_torrent {
     id: number
