@@ -1,5 +1,6 @@
 import { HTMLRewriter } from 'htmlrewriter'
-import { Element, TextChunk } from './types.ts'
+
+import { AttributeHandler, TextHandler } from './rewriter/index.ts'
 
 interface nyaa_torrent {
     id: number
@@ -38,7 +39,7 @@ export async function filter(response: Response): Promise<nyaa_torrent[]> {
         .on(leechers.selector, leechers)
         .on(downloads.selector, downloads)
         .transform(response)
-        .body?.pipeTo(new WritableStream())
+        .arrayBuffer()
 
     const result = id.Value.map((id, index) => ({
         id: parseInt(id.slice(6)),
@@ -63,39 +64,5 @@ function magnetParse(magnet: string) {
         xt: searchParams.get('xt'),
         dn: searchParams.get('amp;dn'),
         tr: searchParams.getAll('amp;tr'),
-    }
-}
-
-class AttributeHandler {
-    readonly selector: string
-    protected targetAttribute: string
-    constructor(selector: string, targetAttribute: string) {
-        this.selector = selector
-        this.targetAttribute = targetAttribute
-    }
-
-    Value: string[] = []
-    element = (element: Element) => {
-        const category = element.getAttribute(this.targetAttribute)
-        if (category) {
-            this.Value.push(category)
-        }
-    }
-}
-
-class TextHandler {
-    readonly selector: string
-    constructor(selector: string) {
-        this.selector = selector
-    }
-
-    Value: string[] = []
-    protected textbuffer: string = ''
-    text = (text: TextChunk) => {
-        this.textbuffer += text.text
-        if (text.lastInTextNode) {
-            this.Value.push(this.textbuffer)
-            this.textbuffer = ''
-        }
     }
 }
