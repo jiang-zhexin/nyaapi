@@ -3,6 +3,7 @@ import { validator } from 'hono/validator'
 import { HTTPException } from 'hono/http-exception'
 
 import { filter } from './filter.ts'
+import { view } from './view.ts'
 
 export const app = new Hono()
 
@@ -26,19 +27,30 @@ app.on(
 		}
 	}),
 	async (c) => {
-		const { pathname, search } = new URL(c.req.url)
-		const nyaa = await fetch(`https://nyaa.si${pathname}${search}`)
-		if (nyaa.status !== 200) {
-			switch (nyaa.status) {
-				case 400:
-					throw new HTTPException(400, { message: 'Seem an unsupported query parameter.' })
-				default:
-					throw new HTTPException(502)
-			}
-		}
+		const nyaa = await fetchNyaa(c.req.url)
 		const result = await filter(nyaa)
 		return c.json(result)
 	},
 )
+
+app.get('/view/:id', async (c) => {
+	const nyaa = await fetchNyaa(c.req.url)
+	const result = await view(nyaa)
+	return c.json(result)
+})
+
+async function fetchNyaa(url: string): Promise<Response> {
+	const { pathname, search } = new URL(url)
+	const nyaa = await fetch(`https://nyaa.si${pathname}${search}`)
+	if (nyaa.status !== 200) {
+		switch (nyaa.status) {
+			case 400:
+				throw new HTTPException(400, { message: 'Seem an unsupported query parameter.' })
+			default:
+				throw new HTTPException(502)
+		}
+	}
+	return nyaa
+}
 
 Deno.serve(app.fetch)
