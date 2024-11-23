@@ -8,49 +8,55 @@ import { view } from './view.ts'
 export const app = new Hono()
 
 app.notFound((c) => {
-	return c.text('This API only filter torrent info. You need to go https://nyaa.si to download binary file.', 400)
+    return c.text('This API only filter torrent info. You need to go https://nyaa.si to download binary file.', 400)
 })
 
 app.onError((err, c) => {
-	if (err instanceof HTTPException) {
-		return err.getResponse()
-	}
-	return c.text('Server throw a unkown error!', 500)
+    if (err instanceof HTTPException) {
+        return err.getResponse()
+    }
+    return c.text('Server throw a unkown error!', 500)
 })
 
 app.on(
-	'GET',
-	['/', '/user/:name'],
-	validator('query', (value, c) => {
-		if (value.page === 'rss') {
-			return c.text('Unsupport rss page.', 400)
-		}
-	}),
-	async (c) => {
-		const nyaa = await fetchNyaa(c.req.url)
-		const result = await filter(nyaa)
-		return c.json(result)
-	},
+    'GET',
+    ['/', '/user/:name'],
+    validator('query', (value, c) => {
+        if (value.page === 'rss') {
+            return c.text('Unsupport rss page.', 400)
+        }
+    }),
+    async (c) => {
+        const nyaa = await fetchNyaa(c.req.url)
+        const result = await filter(nyaa)
+        return c.json(result)
+    },
 )
 
 app.get('/view/:id', async (c) => {
-	const nyaa = await fetchNyaa(c.req.url)
-	const result = await view(nyaa)
-	return c.json(result)
+    const nyaa = await fetchNyaa(c.req.url)
+    const result = await view(nyaa)
+    return c.json(result)
 })
 
 async function fetchNyaa(url: string): Promise<Response> {
-	const { pathname, search } = new URL(url)
-	const nyaa = await fetch(`https://nyaa.si${pathname}${search}`)
-	if (nyaa.status !== 200) {
-		switch (nyaa.status) {
-			case 400:
-				throw new HTTPException(400, { message: 'Seem an unsupported query parameter.' })
-			default:
-				throw new HTTPException(502)
-		}
-	}
-	return nyaa
+    const { pathname, search } = new URL(url)
+    const target = `https://nyaa.si${pathname}${search}`
+    const nyaa = await fetch(target)
+    if (nyaa.status !== 200) {
+        console.error(`fetch ${target} but get nyaa status: ${nyaa.status}`)
+        switch (nyaa.status) {
+            case 400:
+                throw new HTTPException(400, { message: 'Seem an unsupported query parameter.' })
+            case 403:
+                throw new HTTPException(403, { message: 'You have exceeded the maximum number of pages. Please make your search query less broad.' })
+            case 404:
+                throw new HTTPException(404, { message: 'The path you requested does not exist on this server.' })
+            default:
+                throw new HTTPException(502, { message: 'Nyaa return a unkown response.' })
+        }
+    }
+    return nyaa
 }
 
 Deno.serve(app.fetch)
