@@ -1,4 +1,4 @@
-import { Element, TextChunk } from './types.ts'
+import { Element, TextChunk } from 'htmlrewriter'
 
 export class TreeHandler {
     readonly selector: string
@@ -31,7 +31,7 @@ export class TreeHandler {
     }
 }
 
-export function newTreeNode<V>(zeroValue: V): TreeNode<V> {
+function newTreeNode<V>(zeroValue: V): TreeNode<V> {
     return {
         data: zeroValue,
         children: [],

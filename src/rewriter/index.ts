@@ -1,4 +1,4 @@
-import { Element, TextChunk } from './types.ts'
+import { Element, TextChunk } from 'htmlrewriter'
 
 export class AttributeHandler {
     readonly selector: string

@@ -1,4 +1,4 @@
-import { TreeNode } from './rewriter/tree.ts'
+import type { TreeNode } from './rewriter/tree.ts'
 
 export interface NyaaTorrent {
     id: number

@@ -11,14 +11,14 @@ export async function view(response: Response): Promise<NyaaItem> {
     const torrentHandler = new AttributeHandler('div.panel-footer.clearfix > a', 'href')
     const filesHandler = new TreeHandler('div.torrent-file-list.panel-body > ul li')
 
-    await new HTMLRewriter()
+    const rewriter = new HTMLRewriter(() => {})
         .on(titleHandler.selector, titleHandler)
         .on(infoHandler.selector, infoHandler)
         .on(dateHandler.selector, dateHandler)
         .on(torrentHandler.selector, torrentHandler)
         .on(filesHandler.selector, filesHandler)
-        .transform(response)
-        .arrayBuffer()
+    await rewriter.write(await response.bytes())
+    await rewriter.end()
 
     const title = titleHandler.Value.map((value) => value.trim())
     const info = infoHandler.Value.map((value) => value.trim())

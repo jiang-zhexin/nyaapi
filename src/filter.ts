@@ -1,7 +1,6 @@
 import { HTMLRewriter } from 'htmlrewriter'
 
 import { AttributeHandler, TextHandler } from './rewriter/index.ts'
-
 import { ClearMagnet, NyaaTorrent } from './common.ts'
 
 export async function filter(response: Response): Promise<NyaaTorrent[]> {
@@ -16,7 +15,7 @@ export async function filter(response: Response): Promise<NyaaTorrent[]> {
     const leechers = new TextHandler('tr > td:nth-child(7)')
     const downloads = new TextHandler('tr > td:nth-child(8)')
 
-    await new HTMLRewriter()
+    const rewriter = new HTMLRewriter(() => {})
         .on(category.selector, category)
         .on(id.selector, id)
         .on(title.selector, title)
@@ -27,8 +26,8 @@ export async function filter(response: Response): Promise<NyaaTorrent[]> {
         .on(seeders.selector, seeders)
         .on(leechers.selector, leechers)
         .on(downloads.selector, downloads)
-        .transform(response)
-        .arrayBuffer()
+    await rewriter.write(await response.bytes())
+    await rewriter.end()
 
     return id.Value.map((id, index) => ({
         id: parseInt(id.slice(6)),
