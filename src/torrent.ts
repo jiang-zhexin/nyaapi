@@ -1,7 +1,7 @@
 import { BenDecoder } from '@zhexin/bencoder'
 
 export async function torrent(torrent: Response): Promise<Torrent> {
-    const torrentlike = BenDecoder(await torrent.bytes()) as RawTorrent
+    const torrentlike = BenDecoder<RawTorrent>(await torrent.bytes())
     const result = {
         announce: torrentlike.announce,
         announce_list: torrentlike['announce-list'],
