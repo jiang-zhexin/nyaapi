@@ -3,36 +3,28 @@ import { BenDecoder } from '@zhexin/bencoder'
 export async function torrent(torrent: Response): Promise<Torrent> {
     const torrentlike = BenDecoder<RawTorrent>(await torrent.bytes())
     const result = {
-        announce: torrentlike.announce,
-        announce_list: torrentlike['announce-list'],
-        comment: torrentlike.comment,
-        created_by: torrentlike['created by'],
+        announce_list: torrentlike['announce-list'].flat(),
         creation_date: torrentlike['creation date'],
-        encoding: torrentlike.encoding,
-        info: {
-            files: torrentlike.info.files,
-            length: torrentlike.info.length,
-            name: torrentlike.info.name,
-            piece_length: torrentlike.info['piece length'],
-        },
+        files: torrentlike.info.files?.map((f) => {
+            return { length: f.length, path: f.path } as file
+        }),
+        length: torrentlike.info.length,
+        name: torrentlike.info.name,
+        piece_length: torrentlike.info['piece length'],
+        pieces: btoa(String.fromCharCode(...torrentlike.info.pieces)),
     }
-    result.info.files ?? delete result.info.files
+    result.files ?? delete result.files
     return result
 }
 
 interface Torrent {
-    announce: string
-    announce_list: string[][]
-    comment: string
-    created_by: string
+    announce_list: string[]
     creation_date: number
-    encoding: string
-    info: {
-        files?: file[]
-        length: number
-        name: string
-        piece_length: number
-    }
+    files?: file[]
+    length: number
+    name: string
+    piece_length: number
+    pieces: string
 }
 
 interface RawTorrent {
