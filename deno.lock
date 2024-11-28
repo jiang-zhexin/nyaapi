@@ -1,8 +1,14 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@zhexin/bencoder@0.1": "0.1.0",
     "npm:hono@^4.6.12": "4.6.12",
     "npm:html-rewriter-wasm@~0.4.1": "0.4.1"
+  },
+  "jsr": {
+    "@zhexin/bencoder@0.1.0": {
+      "integrity": "97b1b9dee9971a6fb3999f3a36227ad74d6fa1fbb91ed71d5b2a0a57a53f2c7a"
+    }
   },
   "npm": {
     "hono@4.6.12": {
@@ -14,6 +20,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@zhexin/bencoder@0.1",
       "npm:hono@^4.6.12",
       "npm:html-rewriter-wasm@~0.4.1"
     ]

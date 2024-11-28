@@ -4,11 +4,12 @@ import { HTTPException } from 'hono/http-exception'
 
 import { filter } from './filter.ts'
 import { view } from './view.ts'
+import { torrent } from './torrent.ts'
 
 export const app = new Hono()
 
 app.notFound((c) => {
-    return c.text('This API only filter torrent info. You need to go https://nyaa.si to download binary file.', 400)
+    return c.text('This API only filter torrent info. Allow Path: "/", "/user/:name", "/view/:id", "/download/:id"', 400)
 })
 
 app.onError((err, c) => {
@@ -36,6 +37,12 @@ app.on(
 app.get('/view/:id', async (c) => {
     const nyaa = await fetchNyaa(c.req.url)
     const result = await view(nyaa)
+    return c.json(result)
+})
+
+app.get('/download/:id', async (c) => {
+    const nyaa = await fetchNyaa(c.req.url.endsWith('.torrent') ? c.req.url : `${c.req.url}.torrent`)
+    const result = await torrent(nyaa)
     return c.json(result)
 })
 
