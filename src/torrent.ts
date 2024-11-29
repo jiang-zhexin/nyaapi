@@ -11,7 +11,7 @@ export async function torrent(torrent: Response): Promise<Torrent> {
         length: torrentlike.info.length,
         name: torrentlike.info.name,
         piece_length: torrentlike.info['piece length'],
-        pieces: btoa(String.fromCharCode(...torrentlike.info.pieces)),
+        pieces: btoa(torrentlike.info.pieces.toString()),
     }
     result.files ?? delete result.files
     return result

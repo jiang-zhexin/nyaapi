@@ -16,6 +16,7 @@ app.onError((err, c) => {
     if (err instanceof HTTPException) {
         return err.getResponse()
     }
+    console.error(err)
     return c.text('Server throw a unkown error!', 500)
 })
 
