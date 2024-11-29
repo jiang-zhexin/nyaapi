@@ -6,7 +6,7 @@ export async function torrent(torrent: Response): Promise<Torrent> {
         announce_list: torrentlike['announce-list'].flat(),
         creation_date: torrentlike['creation date'],
         files: torrentlike.info.files?.map((f) => {
-            return { length: f.length, path: f.path } as file
+            return { length: f.length, path: f.path } as File
         }),
         length: torrentlike.info.length,
         name: torrentlike.info.name,
@@ -20,11 +20,16 @@ export async function torrent(torrent: Response): Promise<Torrent> {
 interface Torrent {
     announce_list: string[]
     creation_date: number
-    files?: file[]
+    files?: File[]
     length: number
     name: string
     piece_length: number
     pieces: string
+}
+
+interface File {
+    length: number
+    path: string[]
 }
 
 interface RawTorrent {
@@ -35,15 +40,23 @@ interface RawTorrent {
     'creation date': number
     'encoding': string
     'info': {
-        'files'?: file[]
+        'files'?: RawFile[]
         'length': number
         'name': string
+        'name.utf-8': string
         'piece length': number
         'pieces': Uint8Array
+        'publisher'?: string
+        'publisher.utf-8'?: string
+        'publisher-url'?: string
+        'publisher-url.utf-8'?: string
     }
 }
 
-interface file {
-    length: number
-    path: string[]
+interface RawFile {
+    'length': number
+    'path': string[]
+    'path.utf-8'?: string
+    'filehash'?: Uint8Array
+    'ed2k'?: Uint8Array
 }
