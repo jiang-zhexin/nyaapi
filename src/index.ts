@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { logger } from 'hono/logger'
 import { validator } from 'hono/validator'
 import { HTTPException } from 'hono/http-exception'
 
@@ -7,6 +8,7 @@ import { view } from './view.ts'
 import { torrent } from './torrent.ts'
 
 export const app = new Hono()
+app.use(logger())
 
 app.notFound((c) => {
     return c.text('This API only filter torrent info. Allow Path: "/", "/user/:name", "/view/:id", "/download/:id"', 400)
