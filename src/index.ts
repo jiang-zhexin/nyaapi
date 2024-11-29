@@ -60,6 +60,8 @@ async function fetchNyaa(url: string): Promise<Response> {
                 throw new HTTPException(403, { message: 'You have exceeded the maximum number of pages. Please make your search query less broad.' })
             case 404:
                 throw new HTTPException(404, { message: 'The path you requested does not exist on this server.' })
+            case 429:
+                throw new HTTPException(429, { message: 'Too many requests.' })
             default:
                 throw new HTTPException(502, { message: 'Nyaa return a unkown response.' })
         }
