@@ -10,6 +10,7 @@
         ]
     },
     "tasks": {
+        "run": "deno run --allow-read --allow-net src/index.ts",
         "dev": "deno run --watch --allow-read --allow-net src/index.ts"
     },
     "imports": {
