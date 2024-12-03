@@ -11,7 +11,8 @@
     },
     "tasks": {
         "run": "deno run --allow-read --allow-net src/index.ts",
-        "dev": "deno run --watch --allow-read --allow-net src/index.ts"
+        "dev": "deno run --watch --allow-read --allow-net src/index.ts",
+        "build": "deno compile --allow-read --allow-net -o nyaapi src/index.ts"
     },
     "imports": {
         "@zhexin/bencoder": "jsr:@zhexin/bencoder@^0.1.1",
