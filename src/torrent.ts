@@ -2,7 +2,7 @@ import { BenDecoder } from '@zhexin/bencoder'
 
 export async function torrent(torrent: Response): Promise<Torrent> {
     const torrentlike = BenDecoder<RawTorrent>(await torrent.bytes())
-    const result = {
+    return {
         announce_list: torrentlike['announce-list'].flat(),
         creation_date: torrentlike['creation date'],
         files: torrentlike.info.files?.map((f) => {
@@ -13,8 +13,6 @@ export async function torrent(torrent: Response): Promise<Torrent> {
         piece_length: torrentlike.info['piece length'],
         pieces: btoa(torrentlike.info.pieces.toString()),
     }
-    result.files ?? delete result.files
-    return result
 }
 
 interface Torrent {
