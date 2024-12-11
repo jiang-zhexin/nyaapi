@@ -16,7 +16,7 @@
     },
     "imports": {
         "@zhexin/bencoder": "jsr:@zhexin/bencoder@^0.1.1",
-        "hono": "jsr:@hono/hono@^4.6.12",
+        "hono": "jsr:@hono/hono@^4.6.13",
         "htmlrewriter": "npm:html-rewriter-wasm@^0.4.1"
     }
 }
