@@ -1,4 +1,5 @@
 import { BenDecoder } from '@zhexin/bencoder'
+import { encodeBase64 } from '@std/encoding'
 
 export async function torrent(torrent: Response): Promise<Torrent> {
     const torrentlike = BenDecoder<RawTorrent>(await torrent.bytes())
@@ -11,7 +12,7 @@ export async function torrent(torrent: Response): Promise<Torrent> {
         length: torrentlike.info.length,
         name: torrentlike.info.name,
         piece_length: torrentlike.info['piece length'],
-        pieces: btoa(torrentlike.info.pieces.toString()),
+        pieces: encodeBase64(torrentlike.info.pieces),
     }
 }
 

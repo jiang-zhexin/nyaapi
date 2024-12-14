@@ -2,12 +2,16 @@
   "version": "4",
   "specifiers": {
     "jsr:@hono/hono@^4.6.13": "4.6.13",
+    "jsr:@std/encoding@^1.0.5": "1.0.5",
     "jsr:@zhexin/bencoder@~0.1.1": "0.1.1",
     "npm:html-rewriter-wasm@~0.4.1": "0.4.1"
   },
   "jsr": {
     "@hono/hono@4.6.13": {
       "integrity": "198970fc6facf71a88ee57aa1ed32143b56bcb0f842fa965ca3ee7d6fdd21a8e"
+    },
+    "@std/encoding@1.0.5": {
+      "integrity": "ecf363d4fc25bd85bd915ff6733a7e79b67e0e7806334af15f4645c569fefc04"
     },
     "@zhexin/bencoder@0.1.1": {
       "integrity": "b7fea734b70a209f6e38376302cf17e2ec98b5f9fe32e60b9d48689857ea7882"
@@ -21,6 +25,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@hono/hono@^4.6.13",
+      "jsr:@std/encoding@^1.0.5",
       "jsr:@zhexin/bencoder@~0.1.1",
       "npm:html-rewriter-wasm@~0.4.1"
     ]
