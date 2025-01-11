@@ -3,6 +3,7 @@ import { HTMLRewriter } from 'htmlrewriter'
 import { AttributeHandler, TextHandler } from './rewriter/index.ts'
 import { TreeHandler } from './rewriter/tree.ts'
 import { ClearMagnet, ExportTreeNode, NyaaItem } from './common.ts'
+import { transform } from './rewriter/transform.ts'
 
 export async function view(response: Response): Promise<NyaaItem> {
     const titleHandler = new TextHandler('div.panel-heading > h3.panel-title')
@@ -17,8 +18,8 @@ export async function view(response: Response): Promise<NyaaItem> {
         .on(dateHandler.selector, dateHandler)
         .on(torrentHandler.selector, torrentHandler)
         .on(filesHandler.selector, filesHandler)
-    await rewriter.write(await response.bytes())
-    await rewriter.end()
+
+    await transform(rewriter, response)
 
     const title = titleHandler.Value.map((value) => value.trim())
     const info = infoHandler.Value.map((value) => value.trim())
